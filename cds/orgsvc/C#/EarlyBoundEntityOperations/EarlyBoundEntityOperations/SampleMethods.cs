@@ -1,5 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
+﻿using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +9,14 @@ namespace PowerApps.Samples
 {
    public partial class SampleProgram
     {
-        private static Guid _spSiteId;
-        private static Guid _spDocLocId;
+        private static Guid accountId;
+        private static Guid parentAccountId;
         private static bool prompt = true;
-        private static String _siteAbsoluteURL = "http://www.example.com";
-
         /// <summary>
         /// Function to set up the sample.
         /// </summary>
         /// <param name="service">Specifies the service to connect to.</param>
+        /// 
         private static void SetUpSample(CrmServiceClient service)
         {
             // Check that the current version is greater than the minimum version
@@ -27,6 +25,7 @@ namespace PowerApps.Samples
                 //The environment version is lower than version 7.1.0.0
                 return;
             }
+
             CreateRequiredRecords(service);
         }
 
@@ -40,37 +39,9 @@ namespace PowerApps.Samples
         /// </summary>
         public static void CreateRequiredRecords(CrmServiceClient service)
         {
-            // Instantiate a SharePoint site object.
-            // See the Entity Metadata topic in the SDK documentation to determine 
-            // which attributes must be set for each entity.
-            SharePointSite spSite = new SharePointSite
-            {
-                Name = "Sample SharePoint Site",
-                Description = "Sample SharePoint Site Location record",
-                AbsoluteURL = _siteAbsoluteURL,
-                IsGridPresent = true
-            };
-
-            // Create a SharePoint site record named Sample SharePoint Site.
-            _spSiteId = service.Create(spSite);
-            Console.WriteLine("{0} created.", spSite.Name);
-
-            // Instantiate a SharePoint document location object.
-            // See the Entity Metadata topic in the SDK documentation to determine 
-            // which attributes must be set for each entity.
-            SharePointDocumentLocation spDocLoc = new SharePointDocumentLocation
-            {
-                Name = "Sample SharePoint Document Location",
-                Description = "Sample SharePoint Document Location record",
-
-                // Set the Sample SharePoint Site created earlier as the parent site.
-                ParentSiteOrLocation = new EntityReference(SharePointSite.EntityLogicalName, _spSiteId),
-                RelativeUrl = "spdocloc"
-            };
-
-            // Create a SharePoint document location record named Sample SharePoint Document Location.
-            _spDocLocId = service.Create(spDocLoc);
-            Console.WriteLine("{0} created.", spDocLoc.Name);
+            // For this sample, all required entities are created in the Run() method.
+            var account = new Account { Name = "Sample Parent Account" };
+            parentAccountId = service.Create(account);
         }
 
         /// <summary>
@@ -92,8 +63,8 @@ namespace PowerApps.Samples
 
             if (deleteRecords)
             {
-                service.Delete(SharePointDocumentLocation.EntityLogicalName, _spDocLocId);
-                service.Delete(SharePointSite.EntityLogicalName, _spSiteId);
+                service.Delete(Account.EntityLogicalName, accountId);
+                service.Delete(Account.EntityLogicalName, parentAccountId);
                 Console.WriteLine("Entity records have been deleted.");
             }
         }

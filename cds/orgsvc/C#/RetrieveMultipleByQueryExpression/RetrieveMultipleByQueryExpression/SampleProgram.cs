@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PowerApps.Samples
 {
-    public partial class SampleProgram
+   public partial class SampleProgram
     {
         [STAThread] // Added to support UX
         static void Main(string[] args)
@@ -65,9 +65,13 @@ namespace PowerApps.Samples
                         Console.WriteLine("primary contact first name: {0}", act.GetAttributeValue<AliasedValue>("primarycontact.firstname").Value);
                         Console.WriteLine("primary contact first name: {0}", act.GetAttributeValue<AliasedValue>("primarycontact.lastname").Value);
                     }
-                }
-                #endregion Demonstrate
 
+                    #region Clean up
+                    CleanUpSample(service);
+                    #endregion Clean up
+                }
+
+                #endregion Demonstrate
                 else
                 {
                     const string UNABLE_TO_LOGIN_ERROR = "Unable to Login to Dynamics CRM";
@@ -82,8 +86,7 @@ namespace PowerApps.Samples
                     }
                 }
             }
-            #endregion Sample code
-
+            #endregion Sample Code
             catch (Exception ex)
             {
                 SampleHelpers.HandleException(ex);

@@ -9,6 +9,8 @@ namespace PowerApps.Samples
 {
    public partial class SampleProgram
     {
+        private static Guid accountId;
+        private static bool prompt = true;
         /// <summary>
         /// Function to set up the sample.
         /// </summary>
@@ -23,12 +25,12 @@ namespace PowerApps.Samples
                 return;
             }
 
-            //CreateRequiredRecords(service);
+            
         }
 
         private static void CleanUpSample(CrmServiceClient service)
         {
-            //DeleteRequiredRecords(service, prompt);
+           
         }
     }
 }

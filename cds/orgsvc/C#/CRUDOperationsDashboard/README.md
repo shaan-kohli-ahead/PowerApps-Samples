@@ -1,6 +1,6 @@
-# Create, retrieve, update, and delete a recurring appointment
+# Create, retrieve, update, and delete a dashboard
 
-This sample shows how to create, retrieve, update, and delete a recurring appointment series. This sample uses the following common methods:
+This sample shows how to create, retrieve, update, and delete an user-owned dashboard. As part of updating the dashboard, it’s set to be the default dashboard for the organization. This sample uses the following common methods:
 
 - [IOrganizationService.Create](https://docs.microsoft.com/en-us/dotnet/api/microsoft.xrm.sdk.iorganizationservice.create?view=dynamics-general-ce-9)
 - [IOrganizationService.Retrieve](https://docs.microsoft.com/en-us/dotnet/api/microsoft.xrm.sdk.iorganizationservice.retrieve?view=dynamics-general-ce-9)
@@ -25,16 +25,13 @@ In order to simulate the scenario described in [What this sample does](#what-thi
 
 ### Demonstrate
 
-1. Define anonymous types to define the possible recurrence pattern values, possible values for days of the week and possible values for the recurrence rule pattern end type. 
-1. The `RecurringAppointmentMaster` method creates a recurring appointment.
-1. The `QueryExpression` method retrieves the newly created recurring appointment.
-1. The `Update` method updates the subject, number of occurences to 5, appointment interval to 2 for the retrieved recurring appointment.
-
+1. The `mySavedQuery` method grabs the default public view for opportunities. 
+2. The `visualizationQuery` method retrieves the visualizations out of the system. This sample assumes that you have the **Top opportunities**. 
+3. The `dashboard` method sets the dashboard and specifies the FormXml.
+4. The `chartPicker` method enables the chart picker on the chart.
 
 ### Clean up
 
 1. Display an option to delete the records created in the [Setup](#setup).
 
-    The deletion is optional in case you want to examine the entities and data created by the sample. You can manually delete the records to achieve the same result.
-
-
+   The deletion is optional in case you want to examine the entities and data created by the sample. You can manually delete the records to achieve the same result.

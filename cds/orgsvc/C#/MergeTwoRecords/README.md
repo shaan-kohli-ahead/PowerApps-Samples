@@ -1,6 +1,6 @@
-# Sample: Import files as web resources 
+# Sample: Merge two record
 
-This sample shows how to import files as web resources.
+This sample shows how to merge two record.
 
 ## How to run this sample
 
@@ -8,7 +8,7 @@ See [How to run samples](https://github.com/microsoft/PowerApps-Samples/blob/mas
 
 ## What this sample does
 
-This sample will show how to use the `SolutionUniqueName` optional parameter to associate a web resource with a specific solution when it is created.
+The `MergeRequest` message is intended to be used in a scenario where it contains the data that’s needed to merge the information from two entity records of the same type.
 
 ## How this sample works
 
@@ -17,14 +17,13 @@ In order to simulate the scenario described in [What this sample does](#what-thi
 ### Setup
 
 1. Checks for the current version of the org.
-2. The `CreateRequiredRecords` class creates a publisher and a solution required for the sample when adding the web resources.
-
+2. The `CreateRequiredRecords` method creates any entity records that this sample requires.
 
 ### Demonstrate
 
-1. The `XDocument` method reads the descriptive data from the XML files. 
-1. The `WebResource` is used to set the web resource properties.
-1. The `CreateRequest` method is used to add optional parameters.
+1. The `MergeRequest` method creates the request. 
+2. The `Account` message creates another account to hold new data to merge into the entity.
+
 
 ### Clean up
 

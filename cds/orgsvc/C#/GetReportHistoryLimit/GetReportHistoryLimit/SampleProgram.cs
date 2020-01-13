@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sample2
+namespace PowerApps.Samples
 {
     public partial class SampleProgram
     {
@@ -23,6 +24,30 @@ namespace Sample2
                     // Create any entity records that the demonstration code requires
                     SetUpSample(service);
                     #region Demonstrate
+                    // Query for an an existing report: Account Overview. This is a default report in Microsoft Dynamics CRM.				    
+                    QueryByAttribute reportQuery = new QueryByAttribute(Report.EntityLogicalName);
+                    reportQuery.AddAttributeValue("name", "Account Overview");
+                    reportQuery.ColumnSet = new ColumnSet("reportid");
+
+                    // Get the report.
+                    EntityCollection retrieveReports = service.RetrieveMultiple(reportQuery);
+
+                    // Convert retrieved Entity to a report
+                    Report retrievedReport = (Report)retrieveReports.Entities[0];
+                    Console.WriteLine("Retrieved the 'Account Overview' report.");
+
+                    // Use the Download Report Definition message.
+                    var reportHistoryRequest = new GetReportHistoryLimitRequest
+                    {
+                        ReportId = retrievedReport.ReportId.Value
+                    };
+
+                    var reportHistoryResponse = (GetReportHistoryLimitResponse)service.Execute(reportHistoryRequest);
+
+                    // Access the history limit data
+                    int historyLimit = reportHistoryResponse.HistoryLimit;
+
+                    Console.WriteLine("The report history limit is {0}.", historyLimit);
 
                     #endregion Demonstrate
 

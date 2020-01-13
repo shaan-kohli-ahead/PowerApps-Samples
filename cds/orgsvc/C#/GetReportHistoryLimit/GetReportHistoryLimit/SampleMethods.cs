@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +9,7 @@ namespace PowerApps.Samples
 {
     public partial class SampleProgram
     {
-        // Define the variables needed for this sample.
-        static String _currentDirectoryPath;
+
         private static bool prompt = true;
         /// <summary>
         /// Function to set up the sample.
@@ -41,7 +39,6 @@ namespace PowerApps.Samples
         /// </summary>
         public static void CreateRequiredRecords(CrmServiceClient service)
         {
-            // TODO Create entity records
 
             Console.WriteLine("Required records have been created.");
         }
@@ -66,8 +63,9 @@ namespace PowerApps.Samples
 
             if (deleteRecords)
             {
-                File.Delete(_currentDirectoryPath + "\\NewReport.rdl");
-                Console.WriteLine("The downloaded report definition has been deleted.");
+
+
+                Console.WriteLine("Entity records have been deleted.");
             }
         }
 

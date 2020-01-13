@@ -1,5 +1,4 @@
-﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
@@ -11,11 +10,10 @@ namespace PowerApps.Samples
 {
     public partial class SampleProgram
     {
-        //private const String _customEntityName = "new_bankaccount";
-        private static Guid _customViewId;
-        private static Guid _deactivatedViewId;
-        private static SavedQueryState _viewOriginalState;
-        private static OptionSetValue _viewOriginalStatus;
+        // Define the IDs needed for this sample.
+        private static Guid _userId;
+        private static Guid _roleId;
+        private static String _givenRole = "salesperson";
         private static bool prompt = true;
         /// <summary>
         /// Function to set up the sample.
@@ -45,9 +43,13 @@ namespace PowerApps.Samples
         /// </summary>
         public static void CreateRequiredRecords(CrmServiceClient service)
         {
-            // TODO Create entity records
+            // For this sample, all required entities are created in the Run() method.
+            // Create/retrieve a user for role assignment.
+            _userId = SystemUserProvider.RetrieveAUserWithoutAnyRoleAssigned(service);
 
-            Console.WriteLine("Required records have been created.");
+            if (_userId != Guid.Empty)
+                Console.WriteLine("{0} user retrieved.", _userId);
+            
         }
 
 
@@ -71,37 +73,11 @@ namespace PowerApps.Samples
             if (deleteRecords)
             {
 
-                service.Delete(SavedQuery.EntityLogicalName, _customViewId);
+                service.Disassociate("systemuser",
+                    _userId,
+                    new Relationship("systemuserroles_association"),
+                    new EntityReferenceCollection() { new EntityReference("role", _roleId) });
                 Console.WriteLine("Entity records have been deleted.");
-            }
-        }
-
-        /// <summary>
-        /// Reactivates the view that was deactivated for this sample.
-        /// <param name="prompt">Indicates whether to prompt the user to reactivate the view deactivated in this sample.</param>
-        /// </summary>
-        public static void ReactivateDeactivatedView(CrmServiceClient service, bool prompt)
-        {
-            bool reactivateView = true;
-
-            if (prompt)
-            {
-                Console.WriteLine("\nDo you want to reactivate the \"Closed Opportunities in Current Fiscal Year\" view? (y/n)");
-                String answer = Console.ReadLine();
-
-                reactivateView = (answer.StartsWith("y") || answer.StartsWith("Y"));
-            }
-
-            if (reactivateView)
-            {
-                var reactivateViewRequest = new SetStateRequest
-                {
-                    EntityMoniker = new EntityReference(SavedQuery.EntityLogicalName, _deactivatedViewId),
-                    State = new OptionSetValue((int)_viewOriginalState),
-                    Status = _viewOriginalStatus
-                };
-                service.Execute(reactivateViewRequest);
-                Console.WriteLine("The view has been reactivated.");
             }
         }
 

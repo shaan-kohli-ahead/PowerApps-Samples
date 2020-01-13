@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DowmloadReportDefinition", "DowmloadReportDefinition\DowmloadReportDefinition.csproj", "{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetReportHistoryLimit", "GetReportHistoryLimit\GetReportHistoryLimit.csproj", "{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D8EA3557-D523-49D7-A6AD-0944912CCB49}
+		SolutionGuid = {59C8023E-E04B-456C-81A1-45BFBABAB7B5}
 	EndGlobalSection
 EndGlobal

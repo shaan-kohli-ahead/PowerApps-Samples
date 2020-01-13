@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2C175BFA-81A7-48B5-B949-04DDEDA98F02}</ProjectGuid>
+    <ProjectGuid>{3B64BE66-585F-4B6E-9B3D-8A0833B407DD}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>WorkWithViews</RootNamespace>
-    <AssemblyName>WorkWithViews</AssemblyName>
+    <RootNamespace>GetReportHistoryLimit</RootNamespace>
+    <AssemblyName>GetReportHistoryLimit</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{56734C88-54AA-4BDF-9AFD-E629A5D96F3B}</ProjectGuid>
+    <ProjectGuid>{2273D173-5C7D-41B0-B0FB-B0979E9AF0FC}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DowmloadReportDefinition</RootNamespace>
-    <AssemblyName>DowmloadReportDefinition</AssemblyName>
+    <RootNamespace>AssociateSecurityRoleToUser</RootNamespace>
+    <AssemblyName>AssociateSecurityRoleToUser</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

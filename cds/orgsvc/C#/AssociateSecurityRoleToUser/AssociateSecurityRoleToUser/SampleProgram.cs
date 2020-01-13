@@ -1,14 +1,11 @@
-﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace PowerApps.Samples
 {
@@ -26,37 +23,48 @@ namespace PowerApps.Samples
                     // Create any entity records that the demonstration code requires
                     SetUpSample(service);
                     #region Demonstrate
-                    // Query for an an existing report: Account Overview. This is a default report in Microsoft Dynamics CRM.                   
-                    var reportQuery = new QueryByAttribute(Report.EntityLogicalName);
-                    reportQuery.AddAttributeValue("name", "Account Overview");
-                    reportQuery.ColumnSet = new ColumnSet("reportid");
 
-                    // Get the report.
-                    EntityCollection retrieveReports = service.RetrieveMultiple(reportQuery);
-
-                    // Convert retrieved Entity to a report
-                    var retrievedReport = (Report)retrieveReports.Entities[0];
-                    Console.WriteLine("Retrieved the 'Account Overview' report.");
-
-                    // Use the Download Report Definition message.
-                    var rdlRequest = new DownloadReportDefinitionRequest
+                    // Find the role.
+                    QueryExpression query = new QueryExpression
                     {
-                        ReportId = retrievedReport.ReportId.Value
+                        EntityName = Role.EntityLogicalName,
+                        ColumnSet = new ColumnSet("roleid"),
+                        Criteria = new FilterExpression
+                        {
+                            Conditions =
+                                {
+
+                                    new ConditionExpression
+                                    {
+                                        AttributeName = "name",
+                                        Operator = ConditionOperator.Equal,
+                                        Values = {_givenRole}
+                                    }
+                                }
+                        }
                     };
 
-                    var rdlResponse = (DownloadReportDefinitionResponse)service.Execute(rdlRequest);
-
-                    // Get the current directory path.
-                    _currentDirectoryPath = Directory.GetCurrentDirectory();
-
-                    // Access the xml data and save to disk
-                    var reportDefinitionFile = new XmlTextWriter(_currentDirectoryPath + "\\NewReport.rdl", System.Text.Encoding.UTF8);
-                    reportDefinitionFile.WriteRaw(rdlResponse.BodyText);
-                    reportDefinitionFile.Close();
-
-                    if (File.Exists(_currentDirectoryPath + "\\NewReport.rdl"))
+                    // Get the role.
+                    EntityCollection roles = service.RetrieveMultiple(query);
+                    if (roles.Entities.Count > 0)
                     {
-                        Console.WriteLine("Downloaded the report definition (NewReport.rdl) to '{0}'.", _currentDirectoryPath.ToString());
+                        Role salesRole = service.RetrieveMultiple(query).Entities[0].ToEntity<Role>();
+
+                        Console.WriteLine("Role {0} is retrieved for the role assignment.", _givenRole);
+
+                        _roleId = salesRole.Id;
+
+                        // Associate the user with the role.
+                        if (_roleId != Guid.Empty && _userId != Guid.Empty)
+                        {
+                            service.Associate(
+                                        "systemuser",
+                                        _userId,
+                                        new Relationship("systemuserroles_association"),
+                                        new EntityReferenceCollection() { new EntityReference(Role.EntityLogicalName, _roleId) });
+
+                            Console.WriteLine("Role is associated with the user.");
+                        }
                     }
                     #endregion Demonstrate
 

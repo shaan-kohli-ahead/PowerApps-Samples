@@ -1,5 +1,5 @@
-﻿using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
@@ -12,9 +12,7 @@ namespace PowerApps.Samples
 {
     public partial class SampleProgram
     {
-        private static Guid _accountId;
-        private static bool prompt = true;
-        [STAThread] // Added to support UX
+        [STAThread] // Required to support the interactive login experience
         static void Main(string[] args)
         {
             CrmServiceClient service = null;
@@ -23,42 +21,42 @@ namespace PowerApps.Samples
                 service = SampleHelpers.Connect("Connect");
                 if (service.IsReady)
                 {
-                    #region Sample Code
-                    #region Set up
+                    // Create any entity records that the demonstration code requires
                     SetUpSample(service);
-                    #endregion Set up
                     #region Demonstrate
+                    // Retrieve the system user ID of the user to impersonate.
+                    var orgContext = new OrganizationServiceContext(service);
+                    _userId = (from user in orgContext.CreateQuery<SystemUser>()
+                               where user.FullName == "Kevin Cook"
+                               select user.SystemUserId.Value).FirstOrDefault();
 
-                    
-                    // Obtain information about the logged on user from the web service.
-                    Guid userid = ((WhoAmIResponse)service.Execute(new WhoAmIRequest())).UserId;
-                    var systemUser = (SystemUser)service.Retrieve("systemuser", userid,
-                        new ColumnSet(new string[] { "firstname", "lastname" }));
-                    Console.WriteLine("Logged on user is {0} {1}.", systemUser.FirstName, systemUser.LastName);
+                    // To impersonate another user, set the OrganizationServiceProxy.CallerId
+                    // property to the ID of the other user.
+                    service.CallerId = _userId;
 
-                    // Retrieve the version of Microsoft Dynamics CRM.
-                    var versionRequest = new RetrieveVersionRequest();
-                    RetrieveVersionResponse versionResponse =
-                        (RetrieveVersionResponse)service.Execute(versionRequest);
-                    Console.WriteLine("Microsoft Dynamics CRM version {0}.", versionResponse.Version);
-
-                    // Instantiate an account object. Note the use of option set enumerations defined in OptionSets.cs.
-                    // Refer to the Entity Metadata topic in the SDK documentation to determine which attributes must
-                    // be set for each entity.
-                    var account = new Account { Name = "Fourth Coffee" };
-                    account.AccountCategoryCode = new OptionSetValue((int)AccountAccountCategoryCode.PreferredCustomer);
-                    account.CustomerTypeCode = new OptionSetValue((int)AccountCustomerTypeCode.Investor);
+                    // Instantiate an account object.
+                    // See the Entity Metadata topic in the SDK documentation to determine 
+                    // which attributes must be set for each entity.
+                    Account account = new Account { Name = "Fourth Coffee" };
 
                     // Create an account record named Fourth Coffee.
                     _accountId = service.Create(account);
-
                     Console.Write("{0} {1} created, ", account.LogicalName, account.Name);
+                    //</snippetImpersonateWithOnBehalfOfPrivilege2>
 
-                    // Retrieve the several attributes from the new account.
-                    var cols = new ColumnSet(
-                        new String[] { "name", "address1_postalcode", "lastusedincampaign" });
+                    // Retrieve the account containing several of its attributes.
+                    // CreatedBy should reference the impersonated SystemUser.
+                    // CreatedOnBehalfBy should reference the running SystemUser.
+                    ColumnSet cols = new ColumnSet(
+                        "name",
+                        "createdby",
+                        "createdonbehalfby",
+                        "address1_postalcode",
+                        "lastusedincampaign");
 
-                    var retrievedAccount = (Account)service.Retrieve("account", _accountId, cols);
+                    Account retrievedAccount =
+                        (Account)service.Retrieve(Account.EntityLogicalName,
+                            _accountId, cols);
                     Console.Write("retrieved, ");
 
                     // Update the postal code attribute.
@@ -70,20 +68,18 @@ namespace PowerApps.Samples
                     // Shows use of a Money value.
                     retrievedAccount.Revenue = new Money(5000000);
 
-                    // Shows use of a Boolean value.
+                    // Shows use of a boolean value.
                     retrievedAccount.CreditOnHold = false;
 
                     // Update the account record.
                     service.Update(retrievedAccount);
-                    Console.WriteLine("and updated.");
+                    Console.Write("updated, ");
+                    #endregion Demonstrate
 
                     #region Clean up
                     CleanUpSample(service);
                     #endregion Clean up
                 }
-                #endregion Demonstrate
-                #endregion Sample Code
-
                 else
                 {
                     const string UNABLE_TO_LOGIN_ERROR = "Unable to Login to Common Data Service";
@@ -111,6 +107,7 @@ namespace PowerApps.Samples
                 Console.WriteLine("Press <Enter> to exit.");
                 Console.ReadLine();
             }
+
         }
-            }
+    }
 }
